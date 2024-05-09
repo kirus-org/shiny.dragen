@@ -1,0 +1,15 @@
+---
+output: github_document
+---
+
+```{r,  echo = FALSE, collapse=TRUE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+# shiny.dragen <a href="https://kirus-org.github.io/shiny.dragen/"><img src="img/logo.png" align="right" alt="shiny.dragen logo" style="height: 140px;"></a>
+
+> A shiny App for Dragen Pipelines

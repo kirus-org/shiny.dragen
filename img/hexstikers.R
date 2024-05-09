@@ -1,0 +1,10 @@
+hexSticker::sticker("img/dragen_f29405.png", package="shiny.dragen",
+                    p_size=20,
+                    p_y=1.5,
+                    s_x=1,
+                    s_y=.75,
+                    s_width=.6,
+                    p_color = "#f29405", #"#575757", "#FFB441"
+                    h_fill = "#FFFFFF", ,
+                    h_color = "#f29405", #"#ababab", 
+                    filename="img/logo.png")
