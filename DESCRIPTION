@@ -1,0 +1,21 @@
+Package: shiny.dragen
+Title: shiny Dragen pipeline
+Version: 0.9.00
+Date: 2024-05-09
+Authors@R: person("Karim", "Mezhoud", comment = structure("0000-0003-3885-9630", .Names = "ORCID"), role=c("aut", "cre"), email="kmezhoud@gmail.com")
+Description: Dragen Pipeline web application.
+Depends:
+  R (>= 4.4.0)
+Imports:
+  shiny
+Suggests:
+    testthat (>= 2.3.0)
+VignetteBuilder: 
+  knitr
+URL: http://kirus-org.github.io/shiny.dragen,
+    https://kirus-org.github.io/shiny.dragen/
+BugReports: https://github.com/kirus-org/shiny.dragen/issues
+License: AGPL-3 | file LICENSE
+LazyData: true
+RoxygenNote: 7.2.3  
+Encoding: UTF-8
