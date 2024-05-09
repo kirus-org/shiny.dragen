@@ -13,3 +13,16 @@ knitr::opts_chunk$set(
 # shiny.dragen <a href="https://kirus-org.github.io/shiny.dragen/"><img src="img/logo.png" align="right" alt="shiny.dragen logo" style="height: 140px;"></a>
 
 > A shiny App for Dragen Pipelines
+
+
+
+
+
+# generate logo
+
+```{r, eval=FALSE}
+usethis::use_logo(img = "img/logo.png")
+# this generate /man/logo.png
+pkgdown::build_favicons(pkg = ".", overwrite = TRUE)
+```
+
