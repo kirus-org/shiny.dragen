@@ -16,13 +16,3 @@ knitr::opts_chunk$set(
 
 
 
-
-
-# generate logo
-
-```{r, eval=FALSE}
-usethis::use_logo(img = "img/logo.png")
-# this generate /man/logo.png
-pkgdown::build_favicons(pkg = ".", overwrite = TRUE)
-```
-
