@@ -7,7 +7,10 @@ Description: Dragen Pipeline web application.
 Depends:
   R (>= 4.4.0)
 Imports:
-  shiny
+  shiny,
+  shinythemes,
+  shinydashboard,
+  knitr
 Suggests:
     testthat (>= 2.3.0)
 VignetteBuilder: 
@@ -17,5 +20,5 @@ URL: http://kirus-org.github.io/shiny.dragen,
 BugReports: https://github.com/kirus-org/shiny.dragen/issues
 License: AGPL-3 | file LICENSE
 LazyData: true
-RoxygenNote: 7.2.3  
+RoxygenNote: 7.3.1
 Encoding: UTF-8
