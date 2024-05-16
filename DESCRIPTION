@@ -12,7 +12,7 @@ Imports:
   shinydashboard,
   knitr
 Suggests:
-    testthat (>= 2.3.0)
+  testthat (>= 2.3.0)
 VignetteBuilder: 
   knitr
 URL: http://kirus-org.github.io/shiny.dragen,
