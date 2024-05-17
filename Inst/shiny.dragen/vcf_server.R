@@ -43,12 +43,30 @@ observeEvent(input$save_button, {
   
   # Check if text and folder are provided
   if (text != "" && !is.null(folder) && file_name != "") {
-    # Prepare bash command
-    bash_command <- paste("echo", shQuote(text), ">",
-                          shQuote(file.path(folder, file_name)))
     
+    ## OPTION 1 local bash script
+    # Prepare bash command
+    #bash_command <- paste("echo", shQuote(text), ">",
+    #                      shQuote(file.path(folder, file_name)))
     # Execute bash command
-    system(bash_command)
+    #system(bash_command)
+    
+    ## OPTION 2 define var option in system env
+    # set en environment variable for the bash script
+    # Sys.setenv(text = input$text_input)
+    # Sys.setenv(output_folder= rv$vcf_dir_path)
+    # Sys.setenv(file_name= input$file_name)
+    # # Call the Bash script
+    # system("./extdata/scripts/save_text.sh")
+    
+    ## OPTION 3 pass variable through option argument
+    # Create a list of command-line arguments
+     args_list <- c("-t", shQuote(input$text_input),
+                    "-o", rv$vcf_dir_path,
+                    "-m", input$file_name)
+    # Call the shell script with arguments
+    system2("./extdata/scripts/save_text.sh", args = args_list)
+    
     
     output$message <- renderPrint({
       paste("File", file_name, "saved in", folder)
