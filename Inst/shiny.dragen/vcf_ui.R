@@ -33,12 +33,21 @@ output$ui_vcf <- renderUI({
     ),
     fluidRow(width = 12,
              column(width = 6,
-                    wellPanel()
-                    #plotlyOutput("forcast_log_active", height = "350px")
+                    wellPanel(
+                      # File input for output directory
+                     browseDirUI("vcfDir_id", label = "Set VCF Output Folder"),
+                      
+                      actionButton("save_button", label = "Save"),
+                      verbatimTextOutput("message")
+                    )
              ),
              column(width = 6,
-                    wellPanel()
-                    #plotlyOutput("forcast_log_death", height = "350px")  
+                    wellPanel(
+                      textInput(inputId = "file_name", label = "File Name", value = NULL),
+                      # Text area for user input
+                      textAreaInput("text_input", label = "Enter text:"),
+                    )
+  
              )
              
     )

@@ -24,3 +24,38 @@ output$selected_txt_file <- renderPrint( {
   req(input$btn_txt_id)
   txt_browser$file_path
 })
+
+
+
+## set vcf output folder
+## this function stire folderpath in rv$vcf_folder_path
+browseDirServer(id = "vcfDir_id", rv = rv)
+
+
+# Observe the Save button click
+observeEvent(input$save_button, {
+  # Get input values
+  text <- input$text_input
+  folder <- rv$dir_path 
+  file_name <- input$file_name
+  
+  print(paste0("folder: ", folder))
+  
+  # Check if text and folder are provided
+  if (text != "" && !is.null(folder) && file_name != "") {
+    # Prepare bash command
+    bash_command <- paste("echo", shQuote(text), ">",
+                          shQuote(file.path(folder, file_name)))
+    
+    # Execute bash command
+    system(bash_command)
+    
+    output$message <- renderPrint({
+      paste("File", file_name, "saved in", folder)
+    })
+  } else {
+    output$message <- renderPrint({
+      "Please provide text, select a folder, and enter a file name."
+    })
+  }
+})
