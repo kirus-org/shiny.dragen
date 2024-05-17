@@ -2,6 +2,7 @@ suppressMessages({
   library(shiny)
   library(shinythemes)
   library(shinydashboard)
+  library(shinyFiles)
   #library(shinyWidgets)
   library(knitr)
 })

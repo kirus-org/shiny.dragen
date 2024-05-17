@@ -11,8 +11,8 @@
 #'
 #' @name shiny.dragen
 #' @import shiny shinythemes shinydashboard
-#' @import  knitr
 #' @importFrom utils installed.packages
+#' @importFrom shinyFiles shinyDirButton shinyDirChoose
 #' @export
 
 shiny.dragen <- function(){
