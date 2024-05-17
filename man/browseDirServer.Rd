@@ -4,12 +4,14 @@
 \alias{browseDirServer}
 \title{Directory Selection Module Server}
 \usage{
-browseDirServer(id, rv)
+browseDirServer(id, rv, dir_key)
 }
 \arguments{
 \item{id}{A namespace identifier for the module.}
 
 \item{rv}{A reactiveValues object for storing the selected directory path.}
+
+\item{dir_key}{A character string specifying the key to use for storing the directory path in the reactiveValues object.}
 }
 \value{
 None. This function is used for its side effects.
@@ -31,7 +33,7 @@ if (interactive()) {
 
   server <- function(input, output, session) {
     rv <- reactiveValues()
-    browseDirServer("vcfDir1", rv)
+    browseDirServer("vcfDir1", rv, "vcf_folder_path")
   }
 
   shinyApp(ui = ui, server = server)

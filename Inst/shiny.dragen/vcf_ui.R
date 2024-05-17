@@ -38,7 +38,8 @@ output$ui_vcf <- renderUI({
                      browseDirUI("vcfDir_id", label = "Set VCF Output Folder"),
                       
                       actionButton("save_button", label = "Save"),
-                      verbatimTextOutput("message")
+                      verbatimTextOutput("message"),
+                     browseDirUI("fastqDir_id", label = "Set FastQ Output Folder"),
                     )
              ),
              column(width = 6,

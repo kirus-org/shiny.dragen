@@ -29,14 +29,14 @@ output$selected_txt_file <- renderPrint( {
 
 ## set vcf output folder
 ## this function stire folderpath in rv$vcf_folder_path
-browseDirServer(id = "vcfDir_id", rv = rv)
-
+browseDirServer(id = "vcfDir_id", rv = rv, dir_key= "vcf_dir_path")
+browseDirServer(id = "fastqDir_id", rv = rv, dir_key="fastq_dir_path")
 
 # Observe the Save button click
 observeEvent(input$save_button, {
   # Get input values
   text <- input$text_input
-  folder <- rv$dir_path 
+  folder <- rv$vcf_dir_path 
   file_name <- input$file_name
   
   print(paste0("folder: ", folder))

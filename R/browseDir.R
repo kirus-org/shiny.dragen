@@ -40,8 +40,9 @@ browseDirUI <- function(id, label= "Set Output Directory") {
 #'
 #' @param id A namespace identifier for the module.
 #' @param rv A reactiveValues object for storing the selected directory path.
+#' @param dir_key A character string specifying the key to use for storing the directory path in the reactiveValues object.
 #'
-#' @usage browseDirServer(id, rv)
+#' @usage browseDirServer(id, rv, dir_key)
 #'
 #' @return None. This function is used for its side effects.
 #' It stores the path of the selected directory to the provided reactiveValues object.
@@ -61,24 +62,26 @@ browseDirUI <- function(id, label= "Set Output Directory") {
 #'
 #'   server <- function(input, output, session) {
 #'     rv <- reactiveValues()
-#'     browseDirServer("vcfDir1", rv)
+#'     browseDirServer("vcfDir1", rv, "vcf_folder_path")
 #'   }
 #'
 #'   shinyApp(ui = ui, server = server)
 #' }
-browseDirServer <- function(id, rv) {
+browseDirServer <- function(id, rv, dir_key) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
     shinyDirChoose(input, id = 'dir_id', roots = c(home = '~'),
                    filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw"))
     
-    rv$dir_path <- normalizePath("~")
+    observe({
+      rv[[dir_key]] <- normalizePath("~")
+    })
     
     r_dir <- reactive(input$dir_id)
     
     output$dir_path <- renderText({
-      rv$dir_path
+      rv[[dir_key]]
     })
     
     observeEvent(ignoreNULL = TRUE,
@@ -86,7 +89,7 @@ browseDirServer <- function(id, rv) {
                  handlerExpr = {
                    if (!"path" %in% names(r_dir())) return()
                    home <- normalizePath("~")
-                   rv$dir_path <-
+                   rv[[dir_key]] <-
                      file.path(home, paste(unlist(r_dir()$path[-1]),
                                            collapse = .Platform$file.sep))
                  })
