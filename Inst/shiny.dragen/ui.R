@@ -5,6 +5,7 @@ suppressMessages({
   library(shinyFiles)
   #library(shinyWidgets)
   library(knitr)
+  library(shiny.dragen)
 })
 
 shinyUI(fluidPage(theme = shinytheme("flatly"), title = "shiny.dragen", #superhero, flatly, united
