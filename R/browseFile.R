@@ -26,12 +26,26 @@ browserFileUI <- function(id, extension,
   ns <- NS(id)
   tagList(
     fileInput(inputId = ns("file"),
-              label = label,
+              label = div(style = "font-size:20px",tags$b(label)),
               multiple=FALSE,
-              accept = extension)
+              accept = extension),
+               tags$style("
+              .btn-file {
+              vertical-align: middle;border-width: 0px;
+              #background-color:#2c3e50; 
+              #border-color: #2c3e50;
+              vertical-align: middle;
+              border-width: 0px;
+               
+              }
+               .progress-bar {
+               #background-color: red;
+               vertical-align: middle;
+               border-width: 0px;
+              }")
+                         
   )
 }
-
 
 #' Browse File Server
 #'
