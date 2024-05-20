@@ -29,7 +29,7 @@ if (interactive()) {
   )
 
   server <- function(input, output, session) {
-    browseDirServer("vcfDir1")
+    browseDirServer("vcfDir1", rv, "vcf_folder_path", "filetype")
   }
 
   shinyApp(ui = ui, server = server)
