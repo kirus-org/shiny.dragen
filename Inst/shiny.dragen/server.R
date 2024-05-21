@@ -3,6 +3,9 @@ shinyServer(function(input, output, session) {
   # increase limite size file to  120MB
   options(shiny.maxRequestSize=120*1024^2) 
   
+  # Set WorkSpace Path
+  WorkDir <-"/media/DATA/fastq"
+  
   # Define global reactive values
   rv <- reactiveValues()
   

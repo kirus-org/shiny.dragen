@@ -13,6 +13,7 @@
 #' @import shiny shinythemes shinydashboard
 #' @importFrom utils installed.packages
 #' @importFrom shinyFiles shinyDirButton shinyDirChoose
+#' @importFrom DT renderDT DTOutput
 #' @export
 
 shiny.dragen <- function(){

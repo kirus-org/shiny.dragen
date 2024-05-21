@@ -10,7 +10,8 @@ Imports:
   shiny,
   shinythemes,
   shinydashboard,
-  shinyFiles
+  shinyFiles,
+  DT
 Suggests:
   testthat (>= 2.3.0),
   rmarkdown,
