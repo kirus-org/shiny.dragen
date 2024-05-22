@@ -49,8 +49,16 @@ output$fastq_list_DT <- DT::renderDT({
   
   req(fastq_list_file_id$file_path)
   
-  read.csv(fastq_list_file_id$file_path, row.names = NULL) |>
-  DT::datatable( 
+  # Check if the file is empty
+  if (file.info(fastq_list_file_id$file_path)$size == 0) {
+    # Return a gentle message if the file is empty
+   dat <- data.frame( `Warning!` = "The file is empty. Please provide a file with data.")
+  }else{
+    dat <- read.csv(fastq_list_file_id$file_path, row.names = NULL)
+    
+  }
+    
+  DT::datatable( dat,
     rownames = FALSE,
     escape   = FALSE,
     selection = "single",
