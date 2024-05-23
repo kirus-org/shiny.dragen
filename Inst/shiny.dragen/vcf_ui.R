@@ -2,76 +2,71 @@
 output$ui_vcf <- renderUI({
   
   tagList(
+    # tabsetPanel(id = "tabset_id",
+    #             tabPanel(title = "Tab1"),
+    #             tabPanel(title = "Tab2")
+    # ),
     
     fluidRow(
-      h2("Generate Fastq List File"),
-      tags$hr(),
       column(width = 6, offset=0,
              
              h4(tags$b("Set FastQ Directory:"), 
-                div(style = "display:inline-block;",  
-                    # Info Icon
-                    iconDialogUI("info_fastq_dir", icon="info-circle"))
+             div(style = "display:inline-block;",  
+                 # Call the iconDialogUI function to create the info icon
+                 iconDialogUI("info_fastq_dir", icon="info-circle"))
              ),
              wellPanel(#style = "background:grey",
-               browseDirUI(id = "fastq_dir_id", label = "Browse"),
-               textOutput("check_dir_msg")
+             browseDirUI(id = "fastq_dir_id", label = "Browse"),
+             textOutput("check_dir_msg")
              ),
              
              h4(tags$b("Save fastq-list.csv to:")),
              wellPanel(
-               browseDirUI("fast_list_output_id" , label = "Browse")
-             )
-             
+             browseDirUI("fast_list_output_id" , label = "Browse")
+             ),
+                uiOutput("generate_fastq_list_but")
       ),
       column(width = 6, offset = 0,
-             h4(tags$b("Selected Samples:")),
-             wellPanel(
-               #splitLayout(cellWidths = c("20%", "50%"),
-               uiOutput("dynamicSelectInput"),
-               verbatimTextOutput("Ref_gen_path_id")
-               #  )
-             ),
-             uiOutput("generate_fastq_list_but")
+             tabPanel(title = "Tab2",
+                      h4(tags$b("Selected Samples:")),
+                      wellPanel(
+                        #splitLayout(cellWidths = c("20%", "50%"),
+                        uiOutput("dynamicSelectInput"),
+                        verbatimTextOutput("Ref_gen_path_id")
+                        #  )
+                      )
+             )
       )
     ),
-    ##############################
-    h2("Visualize Fastq-list.csv File:"),
+    
     tags$hr(),
+    
     fluidRow(width=12,
              column(width = 6, offset = 0,
                     wellPanel(
-                      browserFileUI("fastq_list_file_id" , extension = ".csv", 
-                                    label=splitLayout(cellWidths = c("90%", "10%"),
-                                                      tags$b("Select fastq-list.csv:"), 
-                                                      uiOutput("fast_list_example"))
-                      )
+                      browseFileUI("fastq_list_file_id" , extension = ".csv", 
+                                    label= div(style= "display:inline-block;clear:right;",
+                                        uiOutput("fast_list_example"),"Select fastq-list.csv:")
+                                    )
                     )
-             ),
+                    ),
              column(width = 6, offset = 0,
-                    
+     
                     DT::DTOutput("fastq_list_DT")  
-             )
-    ),
-    ##################################
-    h2("Generate VCF Files for Selected Samples:"),
-    tags$hr(),
-    
-    selectInput(inputId = "gen_ref_id",label = "Select Reference Genome",
-                choices = list(HG19="/staging/references/human/hg19/hg19.fa.k_21.f_16.m_149/",
-                               HG38="/staging/references/human/hg38/hg38.fa.k_21.f_16.m_149/",
-                               HGMultiple="/staging/references/human/MultiGenome/Path/)" )
-    
+                    
+            
+    )
+    )
     # fluidRow(
     #   column(width = 6, offset = 0, 
     #          style='padding-left:0px; padding-right:10px; padding-top:0px; padding-bottom:5px',
     #          div(style = "height:55px;"),
     #          wellPanel(
-    #            browserFileUI("txt_browser" , extension = ".txt"),
+    #            browseFileUI("txt_browser" , extension = ".txt"),
     # 
-    #            browserFileUI("csv_browser", extension = ".csv"),
+    #            browseFileUI("csv_browser", extension = ".csv"),
     # 
-    #            browserFileUI("fastq_browser", extension = ".fastq.gz")
+    #            browseFileUI("fastq_browser", extension = ".fastq.gz")
     # 
     #          )
     #   ),

@@ -10,17 +10,17 @@
 #'   library(shiny)
 #'
 #'   ui <- fluidPage(
-#'     browserFileUI("file_input_ui", extension = ".csv")
+#'     browseFileUI("file_input_ui", extension = ".csv")
 #'   )
 #'
 #'   server <- function(input, output, session) {
-#'     browserFileServer("file_input_server", extension = ".csv")
+#'     browseFileServer("file_input_server", extension = ".csv")
 #'   }
 #'
 #'   shinyApp(ui, server)
 #' }
 #' @export
-browserFileUI <- function(id, extension, 
+browseFileUI <- function(id, extension, 
                           label=paste0("Select ", extension ," File")) {
   
   ns <- NS(id)
@@ -63,17 +63,17 @@ browserFileUI <- function(id, extension,
 #'   library(shiny)
 #'
 #'   ui <- fluidPage(
-#'     browserFileUI("file_input_ui", extension = ".csv")
+#'     browseFileUI("file_input_ui", extension = ".csv")
 #'   )
 #'
 #'   server <- function(input, output, session) {
-#'     browserFileServer("file_input_server", extension = ".csv")
+#'     browseFileServer("file_input_server", extension = ".csv")
 #'   }
 #'
 #'   shinyApp(ui, server)
 #' }
 #' @export
-browserFileServer <- function(id,extension,output, session){
+browseFileServer <- function(id,extension,output, session){
   
   moduleServer(id, function(input, output, session) {
     

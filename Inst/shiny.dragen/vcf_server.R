@@ -84,7 +84,7 @@ observeEvent(input$gen_fastq_list_but_id, {
 ######################## VISUALIZE FASTQ LIST FILE #################################
 
 # browse Fastq-list_file.txt
-fastq_list_file_id <- browserFileServer(id = "fastq_list_file_id",
+fastq_list_file_id <- browseFileServer(id = "fastq_list_file_id",
                   extension = ".csv")
 
 
@@ -143,14 +143,15 @@ output$fastq_list_DT <- DT::renderDT({
 
 ## Print Reference Genome path
 output$print_ref_gen_path <- renderText({
-  input$Ref_gen_path_id
+  req(input$gen_ref_id)
+  input$gen_ref_id
 })
 
 
 # ########################
-# txt_browser <- browserFileServer("txt_browser", ".txt")
-# csv_browser <- browserFileServer("csv_browser", ".csv")
-# fastq_browser <- browserFileServer("fastq_browser", ".fastq.gz")
+# txt_browser <- browseFileServer("txt_browser", ".txt")
+# csv_browser <- browseFileServer("csv_browser", ".csv")
+# fastq_browser <- browseFileServer("fastq_browser", ".fastq.gz")
 # 
 # global_file_paths <- reactive({
 #   list(

@@ -2,8 +2,8 @@
 
 export(browseDirServer)
 export(browseDirUI)
-export(browserFileServer)
-export(browserFileUI)
+export(browseFileServer)
+export(browseFileUI)
 export(iconDialogServer)
 export(iconDialogUI)
 export(shiny.dragen)
