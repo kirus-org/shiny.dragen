@@ -19,19 +19,24 @@ This module provides a UI for selecting a directory for output processing.
 }
 \examples{
 if (interactive()) {
-  library(shiny)
-  library(shinyFiles)
-
-  ui <- fluidPage(
-    mainPanel(
-      browseDirUI("vcfDir1")
-    )
-  )
-
-  server <- function(input, output, session) {
-    browseDirServer("vcfDir1", rv, "vcf_folder_path", "filetype")
-  }
-
-  shinyApp(ui = ui, server = server)
+ ui <- fluidPage(
+   mainPanel(
+     browseDirUI("vcfDir1"),
+     browseDirUI("vcfDir2")
+   )
+ )
+ 
+ server <- function(input, output, session) {
+ Work_Dir <- normalizePath("~")
+   selected_dir1 <- browseDirServer("vcfDir1")
+   selected_dir2 <- browseDirServer("vcfDir2")
+   
+   observe({
+     print(paste("Directory 1:", selected_dir1()))
+     print(paste("Directory 2:", selected_dir2()))
+   })
+}
+ 
+ shinyApp(ui = ui, server = server)
 }
 }

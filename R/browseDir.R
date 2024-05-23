@@ -10,22 +10,27 @@
 #' @export
 #'
 #' @examples
-#' if (interactive()) {
-#'   library(shiny)
-#'   library(shinyFiles)
-#'
-#'   ui <- fluidPage(
-#'     mainPanel(
-#'       browseDirUI("vcfDir1")
-#'     )
-#'   )
-#'
-#'   server <- function(input, output, session) {
-#'     browseDirServer("vcfDir1", rv, "vcf_folder_path", "filetype")
-#'   }
-#'
-#'   shinyApp(ui = ui, server = server)
+#'if (interactive()) {
+#'  ui <- fluidPage(
+#'    mainPanel(
+#'      browseDirUI("vcfDir1"),
+#'      browseDirUI("vcfDir2")
+#'    )
+#'  )
+#'  
+#'  server <- function(input, output, session) {
+#'  Work_Dir <- normalizePath("~")
+#'    selected_dir1 <- browseDirServer("vcfDir1")
+#'    selected_dir2 <- browseDirServer("vcfDir2")
+#'    
+#'    observe({
+#'      print(paste("Directory 1:", selected_dir1()))
+#'      print(paste("Directory 2:", selected_dir2()))
+#'    })
 #' }
+#'  
+#'  shinyApp(ui = ui, server = server)
+#'}
 browseDirUI <- function(id, label= "Set Directory") {
   ns <- NS(id)
   tagList(
@@ -43,14 +48,11 @@ browseDirUI <- function(id, label= "Set Directory") {
 #' This module handles the server-side logic for selecting a directory for output processing.
 #'
 #' @param id A namespace identifier for the module.
-#' @param rv A reactiveValues object for storing the selected directory path.
-#' @param dir_key A character string specifying the key to use for storing 
-#' the directory path in the reactiveValues object. default: /home.
 #' @param filetype  A character sting specifying the files type to use for starting 
 #' directory path in the reactiveValues object. default c('csv', 'tsv', 'txt')
+#' @param workspace set default work directory
 #'
-#'
-#' @usage browseDirServer(id, rv, dir_key, filetype)
+#' @usage browseDirServer(id, filetype, workspace)
 #'
 #' @return None. This function is used for its side effects.
 #' It stores the path of the selected directory to the provided reactiveValues object.
@@ -58,52 +60,51 @@ browseDirUI <- function(id, label= "Set Directory") {
 #' @export
 #'
 #' @examples
-#' if (interactive()) {
-#'   library(shiny)
-#'   library(shinyFiles)
-#'
-#'   ui <- fluidPage(
-#'     mainPanel(
-#'       browseDirUI("vcfDir1")
-#'     )
-#'   )
-#'
-#'   server <- function(input, output, session) {
-#'     rv <- reactiveValues()
-#'     browseDirServer("vcfDir1", rv, "vcf_folder_path", "filetype")
-#'   }
-#'
-#'   shinyApp(ui = ui, server = server)
+#'if (interactive()) {
+#'  ui <- fluidPage(
+#'    mainPanel(
+#'      browseDirUI("vcfDir1"),
+#'      browseDirUI("vcfDir2")
+#'    )
+#'  )
+#'  
+#'  server <- function(input, output, session) {
+#'    Work_Dir <- normalizePath("~")
+#'    selected_dir1 <- browseDirServer("vcfDir1")
+#'    selected_dir2 <- browseDirServer("vcfDir2")
+#'    
+#'    observe({
+#'      print(paste("Directory 1:", selected_dir1()))
+#'      print(paste("Directory 2:", selected_dir2()))
+#'    })
 #' }
-browseDirServer <- function(id, rv, dir_key= normalizePath("~"), 
-                            filetype = c('','txt', 'csv','tsv')) {
+#'  
+#'  shinyApp(ui = ui, server = server)
+#'}
+browseDirServer <- function(id, filetype= c('', 'txt', 'csv', 'tsv'), 
+                            workspace= normalizePath("~")) {
+  
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
-    shinyDirChoose(input, id = 'dir_id', hidden= FALSE ,
-                   restrictions = system.file(package = "base"),
-                   roots = c(`Workspace` = dir_key),
+    shinyDirChoose(input, id = 'dir_id', 
+                   roots = c(`Workspace` = workspace),
                    filetypes = filetype)
     
-    observe({
-      rv[[dir_key]] <- dir_key 
-    })
+    selected_dir <- reactiveVal(NULL)
     
-    r_dir <- reactive(input$dir_id)
+    observeEvent(input$dir_id, {
+      if (!is.null(input$dir_id) && "path" %in% names(input$dir_id)) {
+        dir_path <- normalizePath(file.path(workspace, paste(unlist(input$dir_id$path[-1]), 
+                                                             collapse = .Platform$file.sep)))
+        selected_dir(dir_path)
+      }
+    })
     
     output$dir_path <- renderText({
-      rv[[dir_key]]
+      selected_dir()
     })
     
-    
-    observeEvent(ignoreNULL = TRUE,
-                 eventExpr = {input$dir_id},
-                 handlerExpr = {
-                   if (!"path" %in% names(r_dir())) return()
-                   init_dir <- dir_key #normalizePath("~")
-                   rv[[dir_key]] <-
-                     file.path(init_dir, paste(unlist(r_dir()$path[-1]),
-                                           collapse = .Platform$file.sep))
-                 })
+    return(selected_dir)
   })
 }

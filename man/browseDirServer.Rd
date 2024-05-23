@@ -4,18 +4,15 @@
 \alias{browseDirServer}
 \title{Directory Selection Module Server}
 \usage{
-browseDirServer(id, rv, dir_key, filetype)
+browseDirServer(id, filetype, workspace)
 }
 \arguments{
 \item{id}{A namespace identifier for the module.}
 
-\item{rv}{A reactiveValues object for storing the selected directory path.}
-
-\item{dir_key}{A character string specifying the key to use for storing 
-the directory path in the reactiveValues object. default: /home.}
-
 \item{filetype}{A character sting specifying the files type to use for starting 
 directory path in the reactiveValues object. default c('csv', 'tsv', 'txt')}
+
+\item{workspace}{set default work directory}
 }
 \value{
 None. This function is used for its side effects.
@@ -26,20 +23,24 @@ This module handles the server-side logic for selecting a directory for output p
 }
 \examples{
 if (interactive()) {
-  library(shiny)
-  library(shinyFiles)
-
-  ui <- fluidPage(
-    mainPanel(
-      browseDirUI("vcfDir1")
-    )
-  )
-
-  server <- function(input, output, session) {
-    rv <- reactiveValues()
-    browseDirServer("vcfDir1", rv, "vcf_folder_path", "filetype")
-  }
-
-  shinyApp(ui = ui, server = server)
+ ui <- fluidPage(
+   mainPanel(
+     browseDirUI("vcfDir1"),
+     browseDirUI("vcfDir2")
+   )
+ )
+ 
+ server <- function(input, output, session) {
+   Work_Dir <- normalizePath("~")
+   selected_dir1 <- browseDirServer("vcfDir1")
+   selected_dir2 <- browseDirServer("vcfDir2")
+   
+   observe({
+     print(paste("Directory 1:", selected_dir1()))
+     print(paste("Directory 2:", selected_dir2()))
+   })
+}
+ 
+ shinyApp(ui = ui, server = server)
 }
 }
