@@ -4,7 +4,7 @@ shinyServer(function(input, output, session) {
   options(shiny.maxRequestSize=120*1024^2) 
   
   # Set WorkSpace Path
-  WorkDir <-"/media/DATA/fastq"
+  Work_Dir <- "/media/DATA/fastq"
   
   # Define global reactive values
   rv <- reactiveValues()

@@ -1,23 +1,53 @@
-##################### FASTQ LIST PROCESSION  #####################
+##################### GENERATE FASTQ LIST FILE  #####################
 
+# Call the iconDialogServer function to handle server-side logic
+iconDialogServer(id = "info_fastq_dir",
+                 title = "FastQ Directory", 
+                 message = "Select a directory containing folders corresponding to the samples. 
+                 Each folder contains 1 or 2 fastq corresponding to Read 1 and/or Read 2")
 
 ## Browse FastQ Directory
-browseDirServer(id = "fastq_dir_id", rv = rv, dir_key= WorkDir,
-                filetype = c("gz"))
+selected_fastq_dir <- browseDirServer(id = "fastq_dir_id",filetype = c("gz"), 
+                                      workspace = Work_Dir)
+
+## set Fastq-list.tx output folder
+selected_fastq_list_dir <- browseDirServer(id = "fast_list_output_id",
+                                           filetype = c(".txt", ".csv"),
+                                           workspace = dirname(Work_Dir))
+
+## check the structure of fastq Directory
+## it must have folder for each sample that starts by A01, A02, B01, B02...
+## each sample folder must has 2 .fastq.gz files
+  output$check_dir_msg <- renderText({
+    
+    req(selected_fastq_dir())
+    
+    # Set the path to the bash script
+    #script_path <-"Inst/shiny.dragen/extdata/scripts/check_fastq_directory_structure.sh"
+    # Execute the bash script and capture its output
+    #script_output <- system(script_path, intern = TRUE)
+    
+    args_list <- selected_fastq_dir()
+    
+    check_dir_msg <- system(paste0("./extdata/scripts/check_fastq_directory_structure.sh ", args_list),
+                            intern = TRUE)
+    
+    paste0(check_dir_msg)
+  })
 
 
 ## Render SelectInput Samples
 output$dynamicSelectInput <- renderUI({
   
-  req(rv[[WorkDir]])
-  selected_dir <- rv[[WorkDir]]
-  
-  if (!dir.exists(selected_dir)) return()
+  req(selected_fastq_dir())
+
+  if (!dir.exists(selected_fastq_dir())) return()
   
   ##  filter only  directory
-  #subdirs <- list.dirs(path = selected_dir, full.names = TRUE, recursive = FALSE)
+  #subdirs <- list.dirs(path = selected_fastq_dir(), full.names = TRUE, recursive = FALSE)
+  
   ## filter with files
-  subdirs <- list.files(path = selected_dir, full.names = TRUE, recursive = FALSE)
+  subdirs <- list.files(path = selected_fastq_dir(), full.names = TRUE, recursive = FALSE)
   
   folder_names <- basename(subdirs)
   #  extract only the first string before "_"
@@ -29,20 +59,46 @@ output$dynamicSelectInput <- renderUI({
   selectInput("gen_ref_id",label = NULL, multiple = TRUE,
               selected = setNames(subdirs, display_names),
               #div(style = "font-size:20px", tags$b("Reference Genomes:")),
-              choices = setNames(subdirs, display_names))
+              choices = head(setNames(subdirs, display_names), n= 10)
+  )
 })
 
-# Call the iconDialogServer function to handle server-side logic
-iconDialogServer("info_module", 
-                 title = "FastQ Directory", 
-                 message = "Select a directory containing folders corresponding to the samples. 
-                 Each folder contains 1 or 2 fastq corresponding to Read 1 and/or Read 2")
+## ActionButton
+output$generate_fastq_list_but <- renderUI({
+  req(selected_fastq_dir(), selected_fastq_list_dir())
+  actionButton(inputId = "gen_fastq_list_but_id", label = "Generate FastQ List File",
+               style="position:relative; left:calc(33%); down:calc(50%);")
+})
 
+## ObserveEvent actionButton to generate Fastq-list.csv
+observeEvent(input$gen_fastq_list_but_id, {
+  # Create a list of command-line arguments
+    args_list <- c("-i", selected_fastq_dir(),
+                    "-o", selected_fastq_list_dir(),
+                     "-f", "fastq-list.csv") 
+    
+  system2("./extdata/scripts/get_fastq_list.sh", args= args_list)
+  
+})
+
+######################## VISUALIZE FASTQ LIST FILE #################################
 
 # browse Fastq-list_file.txt
 fastq_list_file_id <- browserFileServer(id = "fastq_list_file_id",
                   extension = ".csv")
 
+
+output$fast_list_example <- renderUI({
+  
+#req(fastq_list_file_id$file_path)
+iconDialogServer(id = "fastq_example",
+                 title = "Fastq-list.csv example", 
+                 message = HTML('<img src="extdata/img/fastq_list_example.png"/>')
+                 )
+
+# Call the iconDialogUI function to create the info icon
+iconDialogUI("fastq_example", icon="info-circle")
+})
 
 # Render DataTable when file is uploaded
 output$fastq_list_DT <- DT::renderDT({
@@ -83,10 +139,11 @@ output$fastq_list_DT <- DT::renderDT({
     ))
 })
 
+#######################################
 
 ## Print Reference Genome path
-output$Ref_gen_path_id <- renderText({
-  input$gen_ref_id
+output$print_ref_gen_path <- renderText({
+  input$Ref_gen_path_id
 })
 
 
