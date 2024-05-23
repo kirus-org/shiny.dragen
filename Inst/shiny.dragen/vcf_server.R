@@ -56,18 +56,25 @@ output$dynamicSelectInput <- renderUI({
   #pickerInput(inputId = "gen_ref_id",label = NULL, multiple = TRUE,
   #            options = list(`actions-box` = TRUE),
   #            choices = setNames(subdirs, display_names))
-  selectInput("gen_ref_id",label = NULL, multiple = TRUE,
+  selectInput("samples_folder_path_id",label = NULL, multiple = TRUE,
               selected = setNames(subdirs, display_names),
               #div(style = "font-size:20px", tags$b("Reference Genomes:")),
               choices = head(setNames(subdirs, display_names), n= 10)
   )
 })
 
+## Print Reference Genome path
+output$print_sample_folder_path <- renderText({
+  req(input$samples_folder_path_id)
+  input$samples_folder_path_id
+})
+
 ## ActionButton
 output$generate_fastq_list_but <- renderUI({
   req(selected_fastq_dir(), selected_fastq_list_dir())
-  actionButton(inputId = "gen_fastq_list_but_id", label = "Generate FastQ List File",
-               style="position:relative; left:calc(33%); down:calc(50%);")
+  actionButton(inputId = "gen_fastq_list_but_id", label = tags$b("Generate FastQ List File"),
+               style="position: relative;  transform: translateY(-50%); 
+                       left: 50%; transform: translateX(-50%); margin-top:30px")
 })
 
 ## ObserveEvent actionButton to generate Fastq-list.csv
@@ -139,14 +146,29 @@ output$fastq_list_DT <- DT::renderDT({
     ))
 })
 
-#######################################
+#####################    FASTQ2VCF      ##################
 
-## Print Reference Genome path
-output$print_ref_gen_path <- renderText({
-  req(input$gen_ref_id)
-  input$gen_ref_id
+output$print_gen_ref_path <- renderText({
+  req(input$ref_gen_id)
+  input$ref_gen_id
 })
 
+## set Fastq-list.tx output folder
+selected_vcf_dir <- browseDirServer(id = "vcf_output_id",
+                                           filetype = c("gz"),
+                                           workspace = dirname(Work_Dir))
+
+## ObserveEvent actionButton to generate VCF
+observeEvent(input$fastq2vcf_but_id, {
+  # Create a list of command-line arguments
+  args_list <- c("-r", input$ref_gen_id,
+                 "-f", fastq_list_file_id$file_path,
+                 "-o", selected_vcf_dir()
+                 ) 
+  
+  system2("./extdata/scripts/fastq2vcf.sh", args= args_list)
+  
+})
 
 # ########################
 # txt_browser <- browseFileServer("txt_browser", ".txt")

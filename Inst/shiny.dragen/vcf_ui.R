@@ -2,29 +2,26 @@
 output$ui_vcf <- renderUI({
   
   tagList(
-    # tabsetPanel(id = "tabset_id",
-    #             tabPanel(title = "Tab1"),
-    #             tabPanel(title = "Tab2")
-    # ),
-    
+    h2("Generate Fastq-List.csv File:"),
+    tags$hr(),
     fluidRow(
       column(width = 6, offset=0,
              
              h4(tags$b("Set FastQ Directory:"), 
-             div(style = "display:inline-block;",  
-                 # Call the iconDialogUI function to create the info icon
-                 iconDialogUI("info_fastq_dir", icon="info-circle"))
+                div(style = "display:inline-block;",  
+                    # Call the iconDialogUI function to create the info icon
+                    iconDialogUI("info_fastq_dir", icon="info-circle"))
              ),
              wellPanel(#style = "background:grey",
-             browseDirUI(id = "fastq_dir_id", label = "Browse"),
-             textOutput("check_dir_msg")
+               browseDirUI(id = "fastq_dir_id", label = "Browse"),
+               textOutput("check_dir_msg")
              ),
              
              h4(tags$b("Save fastq-list.csv to:")),
              wellPanel(
-             browseDirUI("fast_list_output_id" , label = "Browse")
-             ),
-                uiOutput("generate_fastq_list_but")
+               browseDirUI("fast_list_output_id" , label = "Browse")
+             )
+             
       ),
       column(width = 6, offset = 0,
              tabPanel(title = "Tab2",
@@ -32,30 +29,59 @@ output$ui_vcf <- renderUI({
                       wellPanel(
                         #splitLayout(cellWidths = c("20%", "50%"),
                         uiOutput("dynamicSelectInput"),
-                        verbatimTextOutput("Ref_gen_path_id")
+                        verbatimTextOutput("print_sample_folder_path")
                         #  )
-                      )
+                      ),
+                      uiOutput("generate_fastq_list_but")
              )
       )
     ),
     
+    h2("Visualize Fastq-List.csv File:"),
     tags$hr(),
     
     fluidRow(width=12,
              column(width = 6, offset = 0,
                     wellPanel(
                       browseFileUI("fastq_list_file_id" , extension = ".csv", 
-                                    label= div(style= "display:inline-block;clear:right;",
-                                        uiOutput("fast_list_example"),"Select fastq-list.csv:")
-                                    )
+                                   label= splitLayout(cellWidths = c("90%", "10%"),
+                                                      "Select fastq-list.csv:", uiOutput("fast_list_example"))
+                      )
                     )
-                    ),
+             ),
              column(width = 6, offset = 0,
-     
-                    DT::DTOutput("fastq_list_DT")  
                     
-            
-    )
+                    DT::DTOutput("fastq_list_DT") 
+             )
+    ),
+    
+    h2("Generate VCF files:"),
+    tags$hr(),
+    
+    fluidRow(
+      column(width = 6,
+             
+             wellPanel(
+               selectInput(inputId = "ref_gen_id", label = tags$b("Select Reference Genome:"),
+                           choices =list( HG19= "/staging/references/human/hg19/hg19.fa.k_21.f_16.m_149/",
+                                          HG38= "/staging/references/human/hg38/hg38.fa.k_21.f_16.m_149/",
+                                          MultiGenome= "/staging/references/human/multiGenome/path"),
+                           selected = "/staging/references/human/hg38/hg38.fa.k_21.f_16.m_149/"),
+               verbatimTextOutput("print_gen_ref_path")
+             ),
+             
+             h4(tags$b("Select VCF Output Folder:")),
+             wellPanel(
+               browseDirUI(id = "vcf_output_id", label = "Browse")
+             ),
+             
+      ),
+      column(width = 6,
+             actionButton(inputId = "fastq2vcf_but_id", label = tags$b("Generate VCF"),
+                          style="position: relative;  transform: translateY(-50%); 
+                       left: 50%; transform: translateX(-50%); margin-top:30px")
+             
+      )
     )
     # fluidRow(
     #   column(width = 6, offset = 0, 
