@@ -43,6 +43,12 @@
     <loc>https://kirus-org.github.io/shiny.dragen/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://kirus-org.github.io/shiny.dragen/reference/progressBarServer.html</loc>
+  </url>
+  <url>
+    <loc>https://kirus-org.github.io/shiny.dragen/reference/progressBarUI.html</loc>
+  </url>
+  <url>
     <loc>https://kirus-org.github.io/shiny.dragen/reference/shiny.dragen.html</loc>
   </url>
 </urlset>
