@@ -11,7 +11,8 @@ Imports:
   shinythemes,
   shinydashboard,
   shinyFiles,
-  DT
+  DT,
+  processx
 Suggests:
   testthat (>= 2.3.0),
   rmarkdown,

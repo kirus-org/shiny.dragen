@@ -69,25 +69,38 @@ output$print_sample_folder_path <- renderText({
   input$samples_folder_path_id
 })
 
-## ActionButton
-output$generate_fastq_list_but <- renderUI({
-  req(selected_fastq_dir(), selected_fastq_list_dir())
-  actionButton(inputId = "gen_fastq_list_but_id", label = tags$b("Generate FastQ List File"),
-               style="position: relative;  transform: translateY(-50%); 
-                       left: 50%; transform: translateX(-50%); margin-top:30px")
-})
+# ## ActionButton to generate fastq-list.csv
+# output$generate_fastq_list_but <- renderUI({
+#   req(selected_fastq_dir(), selected_fastq_list_dir())
+#   actionButton(inputId = "gen_fastq_list_but_id", label = tags$b("Generate FastQ List File"),
+#                style="position: relative;  transform: translateY(-50%); 
+#                        left: 50%; transform: translateX(-50%); margin-top:30px")
+# })
 
 ## ObserveEvent actionButton to generate Fastq-list.csv
-observeEvent(input$gen_fastq_list_but_id, {
-  # Create a list of command-line arguments
-    args_list <- c("-i", selected_fastq_dir(),
-                    "-o", selected_fastq_list_dir(),
-                     "-f", "fastq-list.csv") 
-    
-  system2("./extdata/scripts/get_fastq_list.sh", args= args_list)
-  
-})
 
+# observeEvent(input$gen_fastq_list_but_id, {
+#   # Create a list of command-line arguments
+#     args_list <- c("-i", selected_fastq_dir(),
+#                     "-o", selected_fastq_list_dir(),
+#                      "-f", "fastq-list.csv") 
+#     
+#   system2("./extdata/scripts/get_fastq_list.sh", args= args_list)
+#   
+# })
+
+progressBarServer("gen_fastq_list_but_id", 
+                  scriptPath = "./extdata/scripts/get_fastq_list.sh", 
+                  args_list = c("-i", selected_fastq_dir(),
+                                "-o", selected_fastq_list_dir()),
+                  startMessage = "Starting fastq-list.csv...", 
+                  endMessage = "fastq-list.csv completed",
+                  buttonLabel = "Fastq-list.csv",
+                  buttonVisibility= reactive({
+                    req(selected_fastq_dir(), selected_fastq_list_dir())
+                    TRUE
+                  })
+                  )
 ######################## VISUALIZE FASTQ LIST FILE #################################
 
 # browse Fastq-list_file.txt
@@ -159,16 +172,32 @@ selected_vcf_dir <- browseDirServer(id = "vcf_output_id",
                                            workspace = dirname(Work_Dir))
 
 ## ObserveEvent actionButton to generate VCF
-observeEvent(input$fastq2vcf_but_id, {
-  # Create a list of command-line arguments
-  args_list <- c("-r", input$ref_gen_id,
-                 "-f", fastq_list_file_id$file_path,
-                 "-o", selected_vcf_dir()
-                 ) 
-  
-  system2("./extdata/scripts/fastq2vcf.sh", args= args_list)
-  
-})
+# observeEvent(input$fastq2vcf_but_id, {
+#   # Create a list of command-line arguments
+#   args_list <- c("-r", input$ref_gen_id,
+#                  "-f", fastq_list_file_id$file_path,
+#                  "-o", selected_vcf_dir()
+#                  ) 
+#   
+#   system2("./extdata/scripts/fastq2vcf.sh", args= args_list)
+#   
+# })
+
+progressBarServer("fastq2vcf_but_id", 
+                  scriptPath = "./extdata/scripts/fastq2vcf.sh", 
+                  args_list <- c("-r", input$ref_gen_id,
+                                 "-f", fastq_list_file_id$file_path,
+                                 "-o", selected_vcf_dir()
+                  ),
+                  startMessage = "Starting fastq2vcf...", 
+                  endMessage = "VCF completed",
+                  buttonLabel = "Generate VCF",
+                  buttonVisibility= reactive({
+                    req(input$ref_gen_id, fastq_list_file_id$file_path,
+                        selected_vcf_dir())
+                    TRUE
+                  })
+)
 
 # ########################
 # txt_browser <- browseFileServer("txt_browser", ".txt")

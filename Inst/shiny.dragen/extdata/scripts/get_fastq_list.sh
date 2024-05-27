@@ -84,6 +84,9 @@ output_file="$output_path/$output_file"
 echo "RGID,RGSM,RGLB,Lane,Read1File,Read2File" > "$output_file"
 #echo "RGID,RGSM,RGLB,Lane,Read1File,Read2File"
 
+total=$(ls $input_path | grep -Ev .*json | wc -l)
+count=0
+
 for d in $dir; do
     folder=$(ls $input_path/$d)
     for f in $folder; do
@@ -99,4 +102,8 @@ for d in $dir; do
         echo -e "$RGID,$SM,$LB,$Lane,$Read1File,$Read2File"
     done
     wait
+    # Increment the counter and output the progress
+    count=$((count + 1))
+    progress=$((count * 100 / total))
+    echo $progress
 done

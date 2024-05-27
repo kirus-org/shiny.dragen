@@ -24,16 +24,18 @@ output$ui_vcf <- renderUI({
              
       ),
       column(width = 6, offset = 0,
-             tabPanel(title = "Tab2",
-                      h4(tags$b("Selected Samples:")),
-                      wellPanel(
-                        #splitLayout(cellWidths = c("20%", "50%"),
-                        uiOutput("dynamicSelectInput"),
-                        verbatimTextOutput("print_sample_folder_path")
-                        #  )
-                      ),
-                      uiOutput("generate_fastq_list_but")
+             h4(tags$b("Selected Samples:")),
+             wellPanel(
+               #splitLayout(cellWidths = c("20%", "50%"),
+               uiOutput("dynamicSelectInput"),
+               verbatimTextOutput("print_sample_folder_path")
+               #  )
+             ),
+             progressBarUI("gen_fastq_list_but_id", 
+                           buttonLabel = tags$b("Generate FastQ List File")
              )
+             #uiOutput("generate_fastq_list_but")
+             
       )
     ),
     
@@ -77,9 +79,12 @@ output$ui_vcf <- renderUI({
              
       ),
       column(width = 6,
-             actionButton(inputId = "fastq2vcf_but_id", label = tags$b("Generate VCF"),
-                          style="position: relative;  transform: translateY(-50%); 
-                       left: 50%; transform: translateX(-50%); margin-top:30px")
+             #actionButton(inputId = "fastq2vcf_but_id", label = tags$b("Generate VCF"),
+            #              style="position: relative;  transform: translateY(-50%); 
+            #           left: 50%; transform: translateX(-50%); margin-top:30px"),
+             
+             progressBarUI("fastq2vcf_but_id", 
+                           buttonLabel = tags$b("Generate VCF"))
              
       )
     )

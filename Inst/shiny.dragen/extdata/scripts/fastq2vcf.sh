@@ -82,7 +82,11 @@ then
     #echo "fastq-list file is in correct format"
 
     RGSM=$(cat $path_fastqList | cut -f2 -d, | tail -n +2)
-    #echo $RGSM
+    
+    # Set counter
+    total=$(cat $path_fastqList | cut -f2 -d, | tail -n +2 | wc -l)
+    count=0
+    SECONDS=0
     for sample in $RGSM
     do
        if ! test -d "$path_output_dir/$sample" 
@@ -90,9 +94,8 @@ then
             mkdir "$path_output_dir/$sample"            
        fi
       #echo "$path_output_dir/$sample : exists"
-      nohup echo "$sample : $(date '+%d/%m/%Y %H:%M:%S')"
+      #nohup echo "$sample : $(date '+%d/%m/%Y %H:%M:%S')"
       #echo $(date '+%d/%m/%Y %H:%M:%S')
-      SECONDS=0
       sleep 2
        # nohup dragen -f \
        # -r $path_reference_genome \
@@ -104,9 +107,14 @@ then
        # --enable-duplicate-marking true \
        # --enable-map-align-output true
        duration=$SECONDS
-       nohup echo "=================================================================="
-       nohup echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed."
-       nohup echo "=================================================================="
+       #nohup echo "=================================================================="
+       echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed." >> fastq2vcf_log.txt
+       #nohup echo "=================================================================="
+
+       # Increment the counter and output the progress
+       count=$((count + 1))
+       progress=$((count * 100  / total))
+       echo  $progress  # Ensure progress output is consistent
 
     done
 else

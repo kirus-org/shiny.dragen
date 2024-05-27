@@ -14,6 +14,8 @@
 #' @importFrom utils installed.packages
 #' @importFrom shinyFiles shinyDirButton shinyDirChoose
 #' @importFrom DT renderDT DTOutput
+#' @importFrom utils tail
+#' @importFrom processx process
 #' @export
 
 shiny.dragen <- function(){
