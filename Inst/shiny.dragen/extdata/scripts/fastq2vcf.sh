@@ -108,7 +108,7 @@ then
        # --enable-map-align-output true
        duration=$SECONDS
        #nohup echo "=================================================================="
-       echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed." >> fastq2vcf_log.txt
+       echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed." >> "$path_output_dir/log.txt"
        #nohup echo "=================================================================="
 
        # Increment the counter and output the progress
