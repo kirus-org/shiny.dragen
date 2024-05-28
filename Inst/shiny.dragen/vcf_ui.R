@@ -2,10 +2,12 @@
 output$ui_vcf <- renderUI({
   
   tagList(
-    h2("Generate Fastq-List.csv File:"),
-    tags$hr(),
+
     fluidRow(
       column(width = 6, offset=0,
+             
+             h2("Generate Fastq-List.csv File:"),
+             tags$hr(),
              
              h4(tags$b("Set FastQ Directory:"), 
                 div(style = "display:inline-block;",  
@@ -20,10 +22,7 @@ output$ui_vcf <- renderUI({
              h4(tags$b("Save fastq-list.csv to:")),
              wellPanel(
                browseDirUI("fast_list_output_id" , label = "Browse")
-             )
-             
-      ),
-      column(width = 6, offset = 0,
+             ),
              h4(tags$b("Selected Samples:")),
              wellPanel(
                #splitLayout(cellWidths = c("20%", "50%"),
@@ -34,35 +33,31 @@ output$ui_vcf <- renderUI({
              progressBarUI("gen_fastq_list_but_id", 
                            buttonLabel = tags$b("Generate FastQ List File")
              )
-             #uiOutput("generate_fastq_list_but")
              
-      )
-    ),
-    
-    h2("Visualize Fastq-List.csv File:"),
-    tags$hr(),
-    
-    fluidRow(width=12,
-             column(width = 6, offset = 0,
-                    wellPanel(
-                      browseFileUI("fastq_list_file_id" , extension = ".csv", 
-                                   label= splitLayout(cellWidths = c("90%", "10%"),
-                                                      "Select fastq-list.csv:", uiOutput("fast_list_example"))
-                      )
-                    )
+             
+      ),
+      column(width = 6, offset = 0,
+             h2("Generate VCF Files:"),
+             tags$hr(),
+             
+             wellPanel(
+               browseFileUI("fastq_list_file_id" , extension = ".csv", 
+                            label= splitLayout(cellWidths = c("80%", "10%", "10%"),
+                                               "Select fastq-list.csv:", 
+                                               uiOutput("fast_list_example"),
+                                               uiOutput("fastq_list_view")
+                            )
+               )#,
+               #dropdownUI(id="fastq_list_id", 
+               #           label= "View", #div(icon("eye"), width="20%"),
+               #           content= DT::DTOutput("fastq_list_DT"))
              ),
-             column(width = 6, offset = 0,
-                    
-                    DT::DTOutput("fastq_list_DT") 
-             )
-    ),
-    
-    h2("Generate VCF files:"),
-    tags$hr(),
-    
-    fluidRow(
-      column(width = 6,
              
+             h4(tags$b("Select VCF Output Folder:")),
+             wellPanel(
+               browseDirUI(id = "vcf_output_id", label = "Browse")
+               
+             ),
              wellPanel(
                selectInput(inputId = "ref_gen_id", label = tags$b("Select Reference Genome:"),
                            choices =list( HG19= "/staging/references/human/hg19/hg19.fa.k_21.f_16.m_149/",
@@ -71,20 +66,47 @@ output$ui_vcf <- renderUI({
                            selected = "/staging/references/human/hg38/hg38.fa.k_21.f_16.m_149/"),
                verbatimTextOutput("print_gen_ref_path")
              ),
+             progressBarUI("fastq2vcf_but_id", 
+                           buttonLabel = tags$b("Generate VCF")) 
+
              
-             h4(tags$b("Select VCF Output Folder:")),
-             wellPanel(
-               browseDirUI(id = "vcf_output_id", label = "Browse")
+      )
+    ),
+    
+
+    
+    fluidRow(width=12,
+             column(width = 6, offset = 0,
+                 
+                    
              ),
+             column(width = 6, offset = 0,
+                    
+                    #DT::DTOutput("fastq_list_DT") 
+                    
+             )
+    ),
+    
+    
+    tags$hr(),
+    
+    fluidRow(
+      column(width = 6,
+             column(width = 6,
+                    
+             ),
+             column(6, 
+     
+                    
+             )
              
       ),
       column(width = 6,
              #actionButton(inputId = "fastq2vcf_but_id", label = tags$b("Generate VCF"),
-            #              style="position: relative;  transform: translateY(-50%); 
-            #           left: 50%; transform: translateX(-50%); margin-top:30px"),
+             #              style="position: relative;  transform: translateY(-50%); 
+             #           left: 50%; transform: translateX(-50%); margin-top:30px"),
              
-             progressBarUI("fastq2vcf_but_id", 
-                           buttonLabel = tags$b("Generate VCF"))
+             
              
       )
     )
