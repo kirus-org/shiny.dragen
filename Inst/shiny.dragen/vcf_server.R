@@ -120,6 +120,19 @@ iconDialogServer(id = "fastq_example",
 iconDialogUI("fastq_example", icon="info-circle")
 })
 
+output$fastq_list_view <- renderUI({
+  
+ # req(fastq_list_file_id$file_path)
+  
+  iconDialogServer(id = "fastq_view_id",
+                   title = "Fastq-list.csv", 
+                   message = DT::DTOutput("fastq_list_DT")
+  )
+  
+  # Call the iconDialogUI function to create the info icon
+  iconDialogUI("fastq_view_id", icon="eye")
+})
+
 # Render DataTable when file is uploaded
 output$fastq_list_DT <- DT::renderDT({
   
@@ -148,6 +161,7 @@ output$fastq_list_DT <- DT::renderDT({
                    autoWidth = TRUE,
                    scrollX = TRUE,
                    scrollY = TRUE,
+                   #scrollCollapse = TRUE,
                    #order = list(1, 'desc'),
                    language = list(emptyTable = 'The selected file seems to be empty!'),
                    initComplete = JS(
