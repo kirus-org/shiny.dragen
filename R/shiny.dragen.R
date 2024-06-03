@@ -21,8 +21,8 @@
 shiny.dragen <- function(){
   if("shiny.dragen" %in% installed.packages()){
     library(shiny.dragen)
-    shiny::runApp(system.file("shiny.dragen", package = "shiny.dragen"),
-                  launch.browser = TRUE, quiet = TRUE)
+    shiny::runApp(appDir = system.file("shiny.dragen", package = "shiny.dragen"),
+                  launch.browser =TRUE, quiet = TRUE)
   }else{
     stop("Install and load shiny.dragen package before to run it.")
   }

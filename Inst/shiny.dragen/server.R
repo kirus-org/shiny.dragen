@@ -1,10 +1,11 @@
 shinyServer(function(input, output, session) {
   
-  # increase limite size file to  120MB
+  # increase limite size of uploaded file  by shiny app to  120MB
   options(shiny.maxRequestSize=120*1024^2) 
   
   # Set WorkSpace Path
-  Work_Dir <- "/media/DATA/fastq"
+  #Work_Dir <- "/media/DATA/fastq"
+  Work_Dir <- "/srv/shiny-server/Proliant"
   
   # Define global reactive values
   rv <- reactiveValues()
