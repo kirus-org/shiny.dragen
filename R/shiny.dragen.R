@@ -12,7 +12,7 @@
 #' @name shiny.dragen
 #' @import shiny shinythemes shinydashboard
 #' @importFrom utils installed.packages
-#' @importFrom shinyFiles shinyDirButton shinyDirChoose
+#' @importFrom shinyFiles shinyDirButton shinyDirChoose shinyFileChoose shinyFilesButton parseFilePaths
 #' @importFrom DT renderDT DTOutput
 #' @importFrom utils tail
 #' @importFrom processx process

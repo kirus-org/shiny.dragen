@@ -6,7 +6,7 @@ output$ui_vcf <- renderUI({
     fluidRow(
       column(width = 6, offset=0,
              
-             h2("Generate Fastq-List.csv File:"),
+             h2("1- Generate Fastq-List.csv File:"),
              tags$hr(),
              
              h4(tags$b("Set FastQ Directory:"), 
@@ -37,17 +37,26 @@ output$ui_vcf <- renderUI({
              
       ),
       column(width = 6, offset = 0,
-             h2("Generate VCF Files:"),
+             h2("2- Generate VCF Files:"),
              tags$hr(),
              
+             h4(tags$b("Select fastq-list.csv:"), 
+                div(style = "display:inline-block;",
+                    splitLayout( cellWidths = c("50%","50%"),
+                    uiOutput("fast_list_example"),
+                    uiOutput("fastq_list_view")
+                    )
+                )
+             ),
              wellPanel(
-               browseFileUI("fastq_list_file_id" , extension = ".csv", 
-                            label= splitLayout(cellWidths = c("80%", "10%", "10%"),
-                                               "Select fastq-list.csv:", 
-                                               uiOutput("fast_list_example"),
-                                               uiOutput("fastq_list_view")
-                            )
-               )#,
+               browseFileUI_server_side("fastq_list_file_id")
+               # browseFileUI_client_side("fastq_list_file_id" , extension = ".csv", 
+              #               label= splitLayout(cellWidths = c("80%", "10%", "10%"),
+              #                                  "Select fastq-list.csv:", 
+               #                                 uiOutput("fast_list_example"),
+                #                                uiOutput("fastq_list_view")
+                #             )
+                #),
                #dropdownUI(id="fastq_list_id", 
                #           label= "View", #div(icon("eye"), width="20%"),
                #           content= DT::DTOutput("fastq_list_DT"))

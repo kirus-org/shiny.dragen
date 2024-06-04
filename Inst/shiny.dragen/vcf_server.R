@@ -10,7 +10,7 @@ iconDialogServer(id = "info_fastq_dir",
 selected_fastq_dir <- browseDirServer(id = "fastq_dir_id",filetype = c("gz"), 
                                       workspace = Work_Dir)
 
-## set Fastq-list.tx output folder
+## set Fastq-list.txt output folder
 selected_fastq_list_dir <- browseDirServer(id = "fast_list_output_id",
                                            filetype = c(".txt", ".csv"),
                                            workspace = dirname(Work_Dir))
@@ -18,7 +18,7 @@ selected_fastq_list_dir <- browseDirServer(id = "fast_list_output_id",
 ## check the structure of fastq Directory
 ## it must have folder for each sample that starts by A01, A02, B01, B02...
 ## each sample folder must has 2 .fastq.gz files
-  output$check_dir_msg <- renderText({
+output$check_dir_msg <- renderText({
     
     req(selected_fastq_dir())
     
@@ -104,13 +104,20 @@ progressBarServer("gen_fastq_list_but_id",
 ######################## VISUALIZE FASTQ LIST FILE #################################
 
 # browse Fastq-list_file.txt
-fastq_list_file_id <- browseFileServer(id = "fastq_list_file_id",
-                  extension = ".csv")
+#fastq_list_file_id <- browseFileServer_client_side(id = "fastq_list_file_id",
+#                                        workspace = Work_Dir,
+#                                        extension = "csv")
+
+## to acces to file_path: fastq_list_file_id$file_path
+
+fastq_list_file_id <- browseFileServer_server_side(id = "fastq_list_file_id",
+                                        workspace = Work_Dir,
+                                        filetype = "csv")
 
 
 output$fast_list_example <- renderUI({
   
-#req(fastq_list_file_id$file_path)
+#req(fastq_list_file_id())
 iconDialogServer(id = "fastq_example",
                  title = "Fastq-list.csv example", 
                  message = HTML('<img src="extdata/img/fastq_list_example.png"/>')
@@ -122,7 +129,7 @@ iconDialogUI("fastq_example", icon="info-circle")
 
 output$fastq_list_view <- renderUI({
   
- # req(fastq_list_file_id$file_path)
+ # req(fastq_list_file_id())
   
   iconDialogServer(id = "fastq_view_id",
                    title = "Fastq-list.csv", 
@@ -136,14 +143,14 @@ output$fastq_list_view <- renderUI({
 # Render DataTable when file is uploaded
 output$fastq_list_DT <- DT::renderDT({
   
-  req(fastq_list_file_id$file_path)
+  req(fastq_list_file_id())
   
   # Check if the file is empty
-  if (file.info(fastq_list_file_id$file_path)$size == 0) {
+  if (file.info(fastq_list_file_id())$size == 0) {
     # Return a gentle message if the file is empty
    dat <- data.frame( `Warning!` = "The file is empty. Please provide a file with data.")
   }else{
-    dat <- read.csv(fastq_list_file_id$file_path, row.names = NULL)
+    dat <- read.csv(fastq_list_file_id(), row.names = NULL)
     
   }
     
@@ -183,13 +190,13 @@ output$print_gen_ref_path <- renderText({
 ## set Fastq-list.tx output folder
 selected_vcf_dir <- browseDirServer(id = "vcf_output_id",
                                            filetype = c("gz"),
-                                           workspace = dirname(Work_Dir))
+                                           workspace = Work_Dir)
 
 ## ObserveEvent actionButton to generate VCF
 # observeEvent(input$fastq2vcf_but_id, {
 #   # Create a list of command-line arguments
 #   args_list <- c("-r", input$ref_gen_id,
-#                  "-f", fastq_list_file_id$file_path,
+#                  "-f", fastq_list_file_id(),
 #                  "-o", selected_vcf_dir()
 #                  ) 
 #   
@@ -200,14 +207,14 @@ selected_vcf_dir <- browseDirServer(id = "vcf_output_id",
 progressBarServer("fastq2vcf_but_id", 
                   scriptPath = "./extdata/scripts/fastq2vcf.sh", 
                   args_list <- c("-r", input$ref_gen_id,
-                                 "-f", fastq_list_file_id$file_path,
+                                 "-f", fastq_list_file_id(),
                                  "-o", selected_vcf_dir()
                   ),
                   startMessage = "Starting fastq2vcf...", 
                   endMessage = "VCF completed",
                   buttonLabel = "Generate VCF",
                   buttonVisibility= reactive({
-                    req(input$ref_gen_id, fastq_list_file_id$file_path,
+                    req(input$ref_gen_id, fastq_list_file_id(),
                         selected_vcf_dir())
                     TRUE
                   })
