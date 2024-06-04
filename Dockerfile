@@ -2,13 +2,15 @@
 ## remove all docker image withoyt --tag
 #docker image rmi $(docker images -f "dangling=true" -q)
 #docker build --tag kmezhoud/shiny.dragen:vcf .
-#docker run -d -v /media/DATA/fastq:/srv/shiny-server/Proliant -p  3838:3838 kmezhoud/shiny.dragen:vc
+#docker run -d -v /media/DATA/fastq:/home/Proliant -p  3838:3838 kmezhoud/shiny.dragen:vcf
 ## mount partition in Dragen server
-# docker run -d -v /staging/Proliant:/srv/shiny-server/Proliant -p  3838:3838 kmezhoud/shiny.dragen:vc
+# docker run -d --restart unless-stopped -v /staging/Proliant/NextSeq/NSeq_Genetic/Test_App:/home/Proliant -p  3838:3838 kmezhoud/shiny.dragen:vcf
+# docker login
 #docker push kmezhoud/shiny.dragen:vcf
 
 # Base image https://hub.docker.com/u/rocker/
-FROM rocker/shiny:4
+#FROM rocker/r-base
+FROM rocker/shiny
 
                                               ####################
                                             #install linux deps
@@ -18,12 +20,7 @@ FROM rocker/shiny:4
 ## install debian packages
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     apt-utils \
-#    libxml2-dev \
-#    libcairo2-dev \
-#    libsqlite3-dev \
-#    libpq-dev \
     libssh2-1-dev \
-#    unixodbc-dev \
     libcurl4-openssl-dev \
     libssl-dev #\
 #    texlive-latex-base \
@@ -50,6 +47,7 @@ RUN apt-get update && \
                                             # install R packages
                                             ####################
 
+#RUN R -e "install.packages(c('shiny', 'shinyFiles', 'shinythemes', 'shinydashboard','DT', 'processx', 'markdown'), repos='https://cran.rstudio.com/')"
 
 RUN R -e "install.packages('shinyFiles', repos='https://cran.rstudio.com/')"
 RUN R -e "install.packages('shinythemes', repos='https://cran.rstudio.com/')"
@@ -64,10 +62,10 @@ RUN R -e "install.packages('markdown', repos='https://cran.rstudio.com/')"
                                     ########################
  
  ## prepare mount partition
-RUN mkdir /srv/shiny-server/Proliant
+#RUN mkdir /srv/shiny-server/Proliant
 ## set permission read and execute access for everyone and 
 ## also write access for the owner of the file. 755
-RUN chmod -R 755 /srv/shiny-server/Proliant
+#RUN chmod -R 755 /srv/shiny-server/Proliant
  
 ## by default shiny user exist
 ## Add group named shiny to have access to shiny-server

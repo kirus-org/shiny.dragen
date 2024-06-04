@@ -3,9 +3,25 @@ shinyServer(function(input, output, session) {
   # increase limite size of uploaded file  by shiny app to  120MB
   options(shiny.maxRequestSize=120*1024^2) 
   
+  ## check if the shiny app is running in local machine or docker container
+  is_container <- function() {
+    # Check if the app is running inside a Docker container
+    if (file.exists("/.dockerenv")) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  }
+  
   # Set WorkSpace Path
-  #Work_Dir <- "/media/DATA/fastq"
-  Work_Dir <- "/srv/shiny-server/Proliant"
+  if(is_container()){
+    Work_Dir <- "/home/Proliant"
+  }else{
+    Work_Dir <- "/media/DATA/fastq"
+  }
+
+ 
+ 
   
   # Define global reactive values
   rv <- reactiveValues()
@@ -15,7 +31,7 @@ shinyServer(function(input, output, session) {
   
   ## stop shiny app when browser is closed
   session$onSessionEnded(function() {
-    stopApp()
+    #stopApp()
     print("The shiny.dragen session is closed.")
   })
   

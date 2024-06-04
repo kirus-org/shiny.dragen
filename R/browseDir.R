@@ -89,7 +89,8 @@ browseDirServer <- function(id, filetype= c('', 'txt', 'csv', 'tsv'),
     
     shinyDirChoose(input, id = 'dir_id', 
                    roots = c(`Workspace` = workspace),
-                   filetypes = filetype)
+                   filetypes = filetype,
+                   allowDirCreate=TRUE)
     
     selected_dir <- reactiveVal(NULL)
     

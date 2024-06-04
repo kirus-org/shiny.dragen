@@ -47,7 +47,7 @@ shinyUI(fluidPage(theme = shinytheme("flatly"), title = "shiny.dragen", #superhe
                                           list(icon("github"), "Report issue")
                                         )),
                                         tabPanel(tags$a(
-                                          "", href = "https://github.com/kirus-org/shiny.dragen", target = "_blank",
+                                          "", href = "https://kirus-org.github.io/shiny.dragen/", target = "_blank",
                                           list(icon("globe"), "Resources")
                                         ))
                              )
