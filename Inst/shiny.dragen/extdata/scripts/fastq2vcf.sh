@@ -96,16 +96,17 @@ then
       #echo "$path_output_dir/$sample : exists"
       #nohup echo "$sample : $(date '+%d/%m/%Y %H:%M:%S')"
       #echo $(date '+%d/%m/%Y %H:%M:%S')
-      sleep 2
-       # nohup dragen -f \
-       #  -r $path_reference_genome \
-       #  --fastq-list-sample-id $sample \
-       #  --fastq-list $path_fastqList \
-       #  --enable-variant-caller true \
-       #  --output-directory $path_output_dir/$sample \
-       #  --output-file-prefix $sample \
-       #  --enable-duplicate-marking true \
-       #  --enable-map-align-output true
+      #sleep 2
+      /opt/edico/bin/dragen_info -b >> "$path_output_dir/log.txt"
+      /opt/edico/bin/dragen -f \
+         -r $path_reference_genome \
+         --fastq-list-sample-id $sample \
+         --fastq-list $path_fastqList \
+         --enable-variant-caller true \
+         --output-directory $path_output_dir/$sample \
+         --output-file-prefix $sample \
+         --enable-duplicate-marking true \
+         --enable-map-align-output true
        duration=$SECONDS
        #nohup echo "=================================================================="
        echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed." >> "$path_output_dir/log.txt"
